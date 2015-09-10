@@ -45,7 +45,7 @@ public class OpeningHandshakeIT {
                             .accept(URI.create("ws://localhost:8000/echo"))
                             .type("echo")
                             .crossOrigin()
-                                .allowOrigin("http://localhost:8001")
+                                .allowOrigin("*")
                             .done()
                         .done()
                     .done();
