@@ -44,6 +44,7 @@ public class ExtendedHandshakeIT {
                             .crossOrigin()
                                 .allowOrigin("*")
                             .done()
+                            .acceptOption("ws.inactivity.timeout", "123secs")
                         .done()
                         .service()
                             .accept(URI.create("ws://localhost:8000/echoauth"))
@@ -55,6 +56,7 @@ public class ExtendedHandshakeIT {
                             .authorization()
                                 .requireRole("AUTHORIZED")
                             .done()
+                            .acceptOption("ws.inactivity.timeout", "123secs")
                         .done()
                         .security()
                             .realm()
@@ -96,56 +98,54 @@ public class ExtendedHandshakeIT {
     }
 
     @Test
-    @Ignore ("Not ready yet")
+    @Ignore("Fails with org.junit.runners.model.TestTimedOutException(test timed out after 10 seconds)")
     @Specification({"server.sends.message.between.opening.and.extended.handshake/request"})
     public void shouldFailWhenServerSendsMessageBetweenOpeningAndExtendedHandshake() throws Exception {
         k3po.finish();
     }
 
     @Test
-    @Ignore ("Not ready yet")
+    @Ignore("Fails with Exception caught in bridge handler org.apache.mina.filter.codec.ProtocolDecoderException: RSV1 is set (Hexdump: ..)")
     @Specification({"extension.in.opening.and.extended.handshake/request"})
     public void shouldFailWhenExtendedHandShakeHasExtensionFromOpeningHandshake() throws Exception {
         k3po.finish();
     }
 
     @Test
-    @Ignore ("Not ready yet")
+    @Ignore("Fails with javax.security.auth.login.FailedLoginException: No UserName/Password to authenticate")
     @Specification({"extension.in.opening.handshake/request"})
     public void shouldPassWhenExtensionIsNegotiatedInOpeningHandshake() throws Exception {
         k3po.finish();
     }
 
     @Test
-    @Ignore ("Not ready yet")
+    @Ignore("Fails with javax.security.auth.login.FailedLoginException: No UserName/Password to authenticate")
     @Specification({"extension.in.extended.handshake/request"})
     public void shouldPassWhenExtensionIsNegotiatedInExtendedHandshake() throws Exception {
         k3po.finish();
     }
 
     @Test
-    @Ignore ("Not ready yet")
+    @Ignore("Fails with java.lang.Exception: Network connectivity has been lost or transport was closed at other end")
     @Specification({"extended.handshake.response.code.200/request"})
     public void shouldFailWhenWebSocketProtocolGets200StatusCode() throws Exception {
         k3po.finish();
     }
 
     @Test
-    @Ignore ("Not ready yet")
     @Specification({"extended.handshake.response.code.101/request"})
     public void shouldPassWhenWebSocketProtocolGets101StatusCode() throws Exception {
         k3po.finish();
     }
 
     @Test
-    @Ignore ("Not ready yet")
+    @Ignore("Fails with  java.lang.IllegalArgumentException: Illegal character in path at index 1: ${redirect}")
     @Specification({"extended.handshake.response.code.302/request"})
     public void shouldPassWhenWebSocketProtocolGets302StatusCode() throws Exception {
         k3po.finish();
     }
 
     @Test
-    @Ignore ("Not ready yet")
     @Specification({"extended.handshake.response.code.401/request"})
     public void shouldPassWhenWebSocketProtocolGets401StatusCode() throws Exception {
         k3po.finish();
