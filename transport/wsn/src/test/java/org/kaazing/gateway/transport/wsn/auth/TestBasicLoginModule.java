@@ -22,6 +22,9 @@
 package org.kaazing.gateway.transport.wsn.auth;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import javax.security.auth.Subject;
@@ -45,11 +48,31 @@ public class TestBasicLoginModule implements LoginModule {
 
     // testUser's RolePrincipal
     private RolePrincipal userPrincipal;
+    
+    private List<String> roles = new ArrayList<>();
 
     public void initialize(Subject subject, CallbackHandler callbackHandler,
             Map<String, ?> sharedState, Map<String, ?> options) {
         this.subject = subject;
         this.sharedState = sharedState;
+
+        resolveRoles(options);
+    }
+
+    private void resolveRoles(Map<String, ?> options) {
+        String roleString = (String) options.get("roles");
+        if (roleString != null && null != roles)  {
+            String[] roleNames = roleString.split(",");
+            for (int i = 0; i < roleNames.length; i++) {
+                if (roleNames[i] != null) {
+                    roleNames[i] = roleNames[i].trim();
+                }
+            }
+            roles = Arrays.asList(roleNames);
+        }
+        else {
+            roles = Arrays.asList("USER");
+        }
     }
 
     @Override
@@ -78,10 +101,11 @@ public class TestBasicLoginModule implements LoginModule {
         if (!succeeded) {
             return false;
         } else {
-            // add a Principal (authenticated identity) to the Subject
-            userPrincipal = new RolePrincipal("USER");
-            subject.getPrincipals().add(userPrincipal);
-            commitSucceeded = true;
+            if (roles != null) {
+                for (String role : roles) {
+                    subject.getPrincipals().add(new RolePrincipal(role));
+                }
+            }
             return true;
         }
     }

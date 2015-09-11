@@ -18,9 +18,7 @@ package org.kaazing.gateway.transport.wsn.specification.httpx;
 
 import static org.kaazing.test.util.ITUtil.createRuleChain;
 
-import java.io.FileInputStream;
 import java.net.URI;
-import java.security.KeyStore;
 
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -38,18 +36,6 @@ public class ExtendedHandshakeIT {
 
     private GatewayRule gateway = new GatewayRule() {
         {
-
-            KeyStore keyStore = null;
-            try {
-                FileInputStream fileInStr = new FileInputStream(System.getProperty("user.dir")
-                        + "/target/truststore/keystore.db");
-                keyStore = KeyStore.getInstance("JCEKS");
-                keyStore.load(fileInStr, "ab987c".toCharArray());
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-
             GatewayConfiguration configuration =
                     new GatewayConfigurationBuilder()
                         .service()
@@ -71,18 +57,17 @@ public class ExtendedHandshakeIT {
                             .done()
                         .done()
                         .security()
-                            .keyStore(keyStore)
                             .realm()
                                 .name("Kaazing Gateway Demo")
-                                .description("Kaazing Gateway Demo Authentication")
+                                .description("Kaazing Gateway Demo")
                                 .httpChallengeScheme("Application Basic")
                                 .authorizationMode("challenge")
                                 .loginModule()
-                                    .type("file")
-                                    .success("required")
-                                    .option("file", "jaas-config.xml")
+                                    .type("class:org.kaazing.gateway.transport.wsn.auth.TestBasicLoginModule")
+                                    .success("requisite")
+                                    .option("roles", "AUTHORIZED")
                                 .done()
-                             .done()
+                            .done()
                         .done()
                     .done();
             init(configuration);
@@ -93,7 +78,6 @@ public class ExtendedHandshakeIT {
     public TestRule chain = createRuleChain(gateway, k3po);
 
     @Test
-    @Ignore ("Not working")
     @Specification({"connection.established.with.authorization/request"})
     public void shouldEstablishConnectionWithAuthorization() throws Exception {
         k3po.finish();
