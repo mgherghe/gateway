@@ -95,6 +95,20 @@ public class AcceptOptionsTest {
     }
 
     @Test
+  public void testTcpIdleTimeoutOption() throws Exception {
+      // expect default if 0 is specified
+      expectSuccess("tcp.idle.timeout", "0 minutes", "tcp.idle.timeout", 60);
+
+      expectSuccess("tcp.idle.timeout", "10 seconds", "tcp.idle.timeout", 10);
+      expectSuccess("tcp.idle.timeout", "10 minutes", "tcp.idle.timeout", 600);
+      expectSuccess("tcp.idle.timeout", "0.5 minutes", "tcp.idle.timeout", 30);
+
+      expectParseFailure("tcp.idle.timeout", "-1 seconds");
+      expectParseFailure("tcp.idle.timeout", "abc");
+      expectParseFailure("tcp.idle.timeout", null);
+  }
+
+    @Test
     public void testHttpTransportOption() throws Exception {
         expectSuccess("http.transport", "tcp://127.0.0.1:80", "http[http/1.1].transport", "tcp://127.0.0.1:80");
         expectSuccess("http.transport", "tcp://127.0.0.1:80", "http.transport", null);

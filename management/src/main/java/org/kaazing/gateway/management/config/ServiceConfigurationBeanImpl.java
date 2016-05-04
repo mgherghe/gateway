@@ -189,6 +189,11 @@ public class ServiceConfigurationBeanImpl implements ServiceConfigurationBean {
                         jsonOptions.put("http.transport", httpTransport);
                     }
 
+                    Integer tcpIdleTimeout = (Integer) acceptOptions.remove("tcp.idle.timeout");
+                    if (tcpIdleTimeout != null) {
+                        jsonOptions.put("tcp.idle.timeout", tcpIdleTimeout);
+                    }
+
                     long tcpMaxOutboundRate = (Long) acceptOptions.remove("tcp.maximumOutboundRate");
                     jsonOptions.put("tcp.maximum.outbound.rate", tcpMaxOutboundRate);
 
